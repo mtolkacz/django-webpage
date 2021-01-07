@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Webpage</title>
+    <title>{% block title %}Webpage{% endblock %}</title>
     {% load static %}
 </head>
 <body>
-   {% block content %}
-   {% endblock %}
-
+    <h1>Webpage</h1>
+    <main>
+       {% block content %}
+       {% endblock %}
+    </main>
 </body>
 </html>

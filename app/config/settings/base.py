@@ -2,8 +2,6 @@ from pathlib import Path
 import os
 
 from django.core.exceptions import ImproperlyConfigured
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 
 PROJECT_NAME = 'webpage_proj'
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -51,6 +49,7 @@ INSTALLED_APPS = [
     'webpage_proj.comments',
     'webpage_proj.blog',
     'webpage_proj.pages',
+    'webpage_proj.accounts',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +83,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -123,29 +123,36 @@ USE_L10N = True
 USE_TZ = True
 
 
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 # Django Rest Framework
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
 }
 
-sentry_sdk.init(
-    dsn=get_env_variable('SENTRY_SDK'),
-    integrations=[DjangoIntegration()],
-    traces_sample_rate=1.0,
-
-    send_default_pii=True
-)
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 SITE_ID = 1
 
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+# Django All Auth
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'APP': {
-            'client_id': get_env_variable('GOOGLE_CLIENT_ID'),
-            'secret': get_env_variable('GOOGLE_CLIENT_SECRET'),
-            'key': ''
-        }
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
     }
 }

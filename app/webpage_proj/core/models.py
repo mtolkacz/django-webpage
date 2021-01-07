@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 
 
-class PublishedWebContentManager(models.Manager):
+class PublishedContentManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(
             pub_date__isnull=False,
@@ -24,7 +24,7 @@ class WebpageContentModel(models.Model):
     )
 
     objects = models.Manager()  # The default manager.
-    published = PublishedWebContentManager()  # The published content manager.
+    published = PublishedContentManager()  # The published content manager.
 
     class Meta:
         abstract = True
