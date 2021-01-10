@@ -13,7 +13,7 @@ TBA
 ## Functionalities
 TBA
 
-## Example env file
+## Example env file for local development
 * Create .env file in docker-compose root directory /env/dev/.env or /env/prod/.env 
 > SECRET_KEY={your_secret_key}
 <br>DEBUG=1
@@ -30,7 +30,8 @@ TBA
 <br>SENTRY_SDK={your_sentry_url}
 <br>GOOGLE_CLIENT_ID={your_client_id}
 <br>GOOGLE_CLIENT_SECRET={your_client_secret}
-## Run application from docker containers
+<br>DJANGO_SETTINGS_MODULE=config.settings.local
+## Run application from docker containers locally
 > docker-compose -f local.yml up -d --build
 ## Live demo
 TBA

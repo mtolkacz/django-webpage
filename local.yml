@@ -6,7 +6,7 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile.local
-    command: python manage.py runserver 0.0.0.0:8000 --settings=config.settings.local
+    command: python manage.py runserver 0.0.0.0:8000
     stdin_open: true
     tty: true
     volumes:
@@ -28,6 +28,39 @@ services:
     networks:
       webpage:
         ipv4_address: 10.7.0.6
+  celery:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.local
+    command: celery -A gallop worker -l debug
+    env_file: ./env/dev/.env
+    volumes:
+      - ./app/:/usr/src/app/
+    depends_on:
+      - db
+      - rabbitmq
+  celery-beat:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.local
+    command: celery -A gallop beat -l debug --pidfile=
+    volumes:
+      - ./app/:/usr/src/app/
+    env_file: ./env/dev/.env
+    depends_on:
+      - db
+      - rabbitmq
+  rabbitmq:
+    image: rabbitmq:3.8.9-alpine
+    environment:
+      - TZ=Europe/Warsaw
+  flower:
+    image: mher/flower
+    command: ["flower", "--broker=amqp://rabbitmq", "--port=8888"]
+    depends_on:
+      - celery
+    ports:
+      - 8888:8888
 volumes:
   postgres_data:
   pgadmin:

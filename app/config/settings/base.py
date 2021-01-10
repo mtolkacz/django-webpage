@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_celery_beat',
 
     # Local Apps
     'webpage_proj.comments',
@@ -106,6 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
 ]
 
 
@@ -156,3 +158,7 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     }
 }
+
+# Celery configuration
+CELERY_BROKER_URL = 'amqp://rabbitmq'
+CELERY_TIMEZONE = 'Europe/Warsaw'

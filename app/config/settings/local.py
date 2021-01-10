@@ -22,3 +22,7 @@ DATABASES = {
         'PORT': get_env_variable('SQL_PORT'),
     }
 }
+
+if DEBUG:
+    INSTALLED_APPS += ['debug_toolbar']
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
