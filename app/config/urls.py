@@ -3,12 +3,26 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.views.generic.base import TemplateView
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+
+class HelloView(APIView):
+    """
+    Hello World view - testing purposes
+    """
+
+    def get(self, request):
+        content = {'message': 'Hello, World!'}
+        return Response(content)
+
 
 urlpatterns = [
 
     # Django admin interface
     path('webpage-admin/', admin.site.urls),
+
+    path('hello/', HelloView.as_view(), name='hello'),
 
     # Homepage of webpage project
     path(
@@ -19,12 +33,6 @@ urlpatterns = [
         name='index'
     ),
 
-    # Plain Django auth urls, like login, logout, password change
-    path(
-        'accounts/',
-        include('django.contrib.auth.urls'),
-    ),
-
     # All auth social media authentication
     path(
         'accounts/',
@@ -32,14 +40,12 @@ urlpatterns = [
     ),
 
     # Custom user accounts urls, like signup
+    # Django login/logout views
+    # DRF Simple JWT (obtain, refresh token)
     path(
         'accounts/',
         include(('webpage_proj.accounts.urls', 'accounts'), namespace='accounts')
     ),
-
-    # Simple JWT
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 if settings.DEBUG:

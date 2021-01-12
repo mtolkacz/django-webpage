@@ -16,23 +16,17 @@ services:
     env_file: ./env/dev/.env
     depends_on:
       - db
-    networks:
-      webpage:
-        ipv4_address: 10.7.0.5
   db:
     container_name: webpage_db
     image: postgres:13.1-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file: ./env/dev/.env
-    networks:
-      webpage:
-        ipv4_address: 10.7.0.6
   celery:
     build:
       context: ./app
       dockerfile: Dockerfile.local
-    command: celery -A gallop worker -l debug
+    command: celery -A config.celery.app worker -l debug
     env_file: ./env/dev/.env
     volumes:
       - ./app/:/usr/src/app/
@@ -43,7 +37,7 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile.local
-    command: celery -A gallop beat -l debug --pidfile=
+    command: celery -A config.celery.app beat -l debug --pidfile=
     volumes:
       - ./app/:/usr/src/app/
     env_file: ./env/dev/.env
@@ -64,9 +58,3 @@ services:
 volumes:
   postgres_data:
   pgadmin:
-networks:
-  webpage:
-    driver: bridge
-    ipam:
-     config:
-       - subnet: 10.7.0.0/16
