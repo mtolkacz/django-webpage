@@ -1,3 +1,14 @@
 from django.contrib import admin
 
-# Register your models here.
+from . import models
+
+
+@admin.register(models.Entry)
+class EntryAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'id',
+        'status',
+        'slug',
+        'creator',
+    )

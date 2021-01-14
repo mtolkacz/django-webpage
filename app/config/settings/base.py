@@ -148,12 +148,16 @@ SIMPLE_JWT = {
     # New refresh token when refresh request
     # Since we are rotating, it’s also a fresh Refresh token
     # as long as the user keeps visiting before this expires, they'll never have to log in again
-    'ROTATE_REFRESH_TOKENS': True,
+    'ROTATE_REFRESH_TOKENS': False,
 
-    'BLACKLIST_AFTER_ROTATION': False,
+    'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
     'VERIFYING_KEY': None,
+    'AUTH_HEADER_TYPES': (
+        'Bearer',
+        'JWT',
+    ),
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),

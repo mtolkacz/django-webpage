@@ -19,11 +19,6 @@ class HelloView(APIView):
 
 urlpatterns = [
 
-    # Django admin interface
-    path('webpage-admin/', admin.site.urls),
-
-    path('hello/', HelloView.as_view(), name='hello'),
-
     # Homepage of webpage project
     path(
         route='',
@@ -31,6 +26,14 @@ urlpatterns = [
             template_name='index.html'
         ),
         name='index'
+    ),
+
+    path('hello/', HelloView.as_view(), name='hello'),
+
+    # Blog app
+    path(
+        'blog/',
+        include(('webpage_proj.blog.urls', 'blog'), namespace='blog')
     ),
 
     # All auth social media authentication
@@ -46,6 +49,9 @@ urlpatterns = [
         'accounts/',
         include(('webpage_proj.accounts.urls', 'accounts'), namespace='accounts')
     ),
+
+    # Django admin interface
+    path('webpage-admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:
