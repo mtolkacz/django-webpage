@@ -30,7 +30,7 @@ class WebpageContentModel(models.Model):
         (PUBLISHED, _('Published')),
     )
 
-    creator = models.OneToOneField(
+    creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
@@ -43,11 +43,13 @@ class WebpageContentModel(models.Model):
     )
     body = models.TextField()
     pub_date = models.DateTimeField(
-        blank=True,
+        editable=False,
+        null=True,
     )
     slug = models.SlugField(
         max_length=250,
-        unique_for_date='pub_date'
+        unique_for_date='pub_date',
+        editable=False,
     )
     status = models.PositiveSmallIntegerField(
         choices=OPTIONS,
