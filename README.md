@@ -31,6 +31,10 @@ TBA
 <br>GOOGLE_CLIENT_ID={your_client_id}
 <br>GOOGLE_CLIENT_SECRET={your_client_secret}
 <br>DJANGO_SETTINGS_MODULE=config.settings.local
+<br>EMAIL_HOST=smtp.gmail.com
+<br>EMAIL_HOST_USER={your_email}
+<br>EMAIL_HOST_PASSWORD={your_client_secret}
+<br>EMAIL_PORT=587
 ## Run application from docker containers locally
 > docker-compose -f local.yml up -d --build
 ## Live demo
