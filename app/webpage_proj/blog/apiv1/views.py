@@ -10,5 +10,13 @@ class EntryList(generics.ListAPIView):
 
 
 class EntryDetail(generics.RetrieveAPIView):
+    queryset = Entry.published.all()
+    serializer_class = EntrySerializer
     permission_classes = [permissions.AllowAny]
+
+
+class EntryCreate(generics.CreateAPIView):
+    queryset = Entry.published.all()
+    serializer_class = EntrySerializer
+    permission_classes = [permissions.IsAdminUser]
 

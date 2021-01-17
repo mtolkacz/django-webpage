@@ -2,6 +2,7 @@ from datetime import timedelta
 from pathlib import Path
 import os
 
+from celery.schedules import crontab
 from django.core.exceptions import ImproperlyConfigured
 
 PROJECT_NAME = 'webpage_proj'
@@ -164,7 +165,13 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# E-mail configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = get_env_variable('EMAIL_HOST')
+EMAIL_HOST_USER = get_env_variable('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = get_env_variable('EMAIL_PORT')
+EMAIL_USE_TLS = True
 
 SITE_ID = 1
 
@@ -190,3 +197,11 @@ SOCIALACCOUNT_PROVIDERS = {
 # Celery configuration
 CELERY_BROKER_URL = 'amqp://rabbitmq'
 CELERY_TIMEZONE = 'Europe/Warsaw'
+CELERY_BEAT_SCHEDULE = {
+    "every day 10 AM": {
+        "task": "webpage_proj.blog.tasks.latest_blog_entry_notification",
+        "schedule": crontab(hour='10',
+                            minute=0,
+                            )
+    },
+}

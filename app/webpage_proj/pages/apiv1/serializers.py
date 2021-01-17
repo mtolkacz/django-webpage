@@ -1,12 +1,10 @@
 from rest_framework import serializers
-from ..models import Entry
+from ..models import Page
 
 
-class EntrySerializer(serializers.ModelSerializer):
-    url = serializers.URLField(source='get_absolute_url', read_only=True)
-
+class PageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Entry
+        model = Page
         fields = (
             'id',
             'title',
@@ -14,5 +12,4 @@ class EntrySerializer(serializers.ModelSerializer):
             'excerpt',
             'body',
             'status',
-            'url',
         )

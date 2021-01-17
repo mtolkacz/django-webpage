@@ -1,3 +1,11 @@
 from django.contrib import admin
 
-# Register your models here.
+from . import models
+
+
+@admin.register(models.Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = (
+        'comment',
+        'type',
+    )
