@@ -1,17 +1,60 @@
-version: "3.7"
+version: '3.7'
 
 services:
-  web:
-    build: ./app
-    command: gunicorn --env DJANGO_SETTINGS_MODULE=config.settings.production config.wsgi:application --bind 0.0.0.0:$PORT
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/production/nginx/Dockerfile
+    volumes:
+      - static_volume:/app/backend/static_root
+      - media_volume:/app/backend/media_root
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/production/backend/Dockerfile
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./app/:/usr/src/app/
+    ports:
+      - 8000:8000
     env_file: ./env/prod/.env
     depends_on:
       - db
   db:
-    image: postgres
+    image: postgres:13.1-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file: ./env/prod/.env
+  celery:
+    build:
+      context: .
+      dockerfile: ./docker/production/backend/Dockerfile
+    command: celery -A config.celery.app worker
+    env_file: ./env/prod/.env
+    volumes:
+      - ./app/:/usr/src/app/
+    depends_on:
+      - db
+      - rabbitmq
+  celery-beat:
+    build:
+      context: .
+      dockerfile: ./docker/production/backend/Dockerfile
+    command: celery -A config.celery.app beat --pidfile=
+    volumes:
+      - ./app/:/usr/src/app/
+    env_file: ./env/prod/.env
+    depends_on:
+      - db
+      - rabbitmq
+  rabbitmq:
+    image: rabbitmq:3.8.9-alpine
+    environment:
+      - TZ=Europe/Warsaw
 volumes:
   postgres_data:
   static_volume:

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+
+
+<title>{% block title %}Home{% endblock %}</title>
+{% load static %}
+<main class="container">
+  <div class="bg-light p-5 rounded">
+    <h1>{% if user.is_authenticated %}Welcome, {{ user.first_name }}!{% else %}
+            You are not logged in{% endif %}</h1>
+    <p class="lead">
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'accounts:blacklist' %}">Log Out</a>
+        {% else %}
+            <a href="{% url 'accounts:login' %}">Log In</a> |
+            <a href="{% url 'accounts:register' %}">Sign Up</a>
+        {% endif %}
+    </p>
+  </div>
+</main>
+{% endblock %}

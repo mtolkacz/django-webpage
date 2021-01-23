@@ -1,31 +1,27 @@
 version: '3.7'
 
 services:
-  web:
-    container_name: webpage_web
+  backend:
     build:
-      context: ./app
-      dockerfile: Dockerfile.local
+      context: .
+      dockerfile: ./docker/local/backend/Dockerfile
     command: python manage.py runserver 0.0.0.0:8000
-    stdin_open: true
-    tty: true
     volumes:
-      - ./app/:/usr/src/app/
+      - ./app/:/usr/src/app/-
     ports:
       - 8000:8000
     env_file: ./env/dev/.env
     depends_on:
       - db
   db:
-    container_name: webpage_db
     image: postgres:13.1-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file: ./env/dev/.env
   celery:
     build:
-      context: ./app
-      dockerfile: Dockerfile.local
+      context: .
+      dockerfile: ./docker/local/backend/Dockerfile
     command: celery -A config.celery.app worker -l debug
     env_file: ./env/dev/.env
     volumes:
@@ -35,8 +31,8 @@ services:
       - rabbitmq
   celery-beat:
     build:
-      context: ./app
-      dockerfile: Dockerfile.local
+      context: .
+      dockerfile: ./docker/local/backend/Dockerfile
     command: celery -A config.celery.app beat -l debug --pidfile=
     volumes:
       - ./app/:/usr/src/app/
@@ -57,4 +53,5 @@ services:
       - 8888:8888
 volumes:
   postgres_data:
-  pgadmin:
+  static_volume: {}
+

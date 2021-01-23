@@ -18,6 +18,21 @@ db.sqlite3
 db.sqlite3-journal
 media
 
+### react ###
+.DS_*
+logs
+**/*.backup.*
+**/*.back.*
+
+node_modules
+bower_components
+
+*.sublime*
+
+psd
+thumb
+sketch
+
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
 # <django-project-name>/staticfiles/
@@ -182,4 +197,7 @@ dmypy.json
 
 .idea/
 /scripts/
-/app/staticfiles/
+static
+static_root
+staticfiles
+
